@@ -43,6 +43,13 @@ func GetHashValue(s string, a string) string {
 			//some error logging
 		}
 		hvalue = convByteArrToUcString(h.Sum(nil)[:])
+
+	default:
+		h := md5.New()
+		if _, err := io.Copy(h, f); err != nil {
+			//some error logging
+		}
+		hvalue = convByteArrToUcString(h.Sum(nil)[:])
 	}
 
 	return hvalue
