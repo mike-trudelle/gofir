@@ -10,7 +10,7 @@ import (
 	"strings"
 )
 
-func getHashValue(s string, a string) string {
+func GetHashValue(s string, a string) string {
 
 	f, err := os.Open(s)
 
