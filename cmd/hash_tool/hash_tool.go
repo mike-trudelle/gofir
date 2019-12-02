@@ -19,11 +19,11 @@ func main() {
 	flag.StringVar(&folderName, "folder", "", "a folder path")
 	flag.StringVar(&fileName, "file", "", "a file path")
 	flag.StringVar(&fileOutput, "output", "", "file path to dump data to")
-	flag.StringVar(&algorithm, "algorithm", "", "hash algorithm to use (MD5/SHA1/SHA256)")
+	flag.StringVar(&algorithm, "algorithm", "MD5", "hash algorithm to use (MD5/SHA1/SHA256)")
 
 	flag.Parse()
 
-	//open output file
+	//open output file for writing
 	o, err := os.OpenFile(fileOutput, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
 
 	if err != nil {
@@ -33,7 +33,17 @@ func main() {
 	defer o.Close() //wait to close file
 
 	//write the csv header data
-	if _, err := o.WriteString("FileName,HashValue \r\n"); err != nil {
+	var h string
+	
+	if algorithm != "" {
+
+		h = "FileName,HashValue(" + algorithm + ") \r\n"
+	} else {
+
+		h = "FileName,HashValue(MD5) \r\n"
+	}
+
+	if _, err := o.WriteString(h); err != nil {
 		//some error logging
 	}
 
