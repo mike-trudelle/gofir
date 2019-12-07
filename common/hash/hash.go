@@ -5,11 +5,13 @@ import (
 	"crypto/sha1"
 	"crypto/sha256"
 	"encoding/hex"
+	"hash/crc32"
 	"io"
 	"os"
 	"strings"
 )
 
+// GetHashValue gets the hash of a string using a chosen algorithm
 func GetHashValue(s string, a string) string {
 
 	f, err := os.Open(s)
@@ -39,6 +41,14 @@ func GetHashValue(s string, a string) string {
 
 	case "SHA256":
 		h := sha256.New()
+		if _, err := io.Copy(h, f); err != nil {
+			//some error logging
+		}
+		hvalue = convByteArrToUcString(h.Sum(nil)[:])
+
+	case "CRC32":
+		tablePolynomial := crc32.MakeTable(0xedb88320)
+		h := crc32.New(tablePolynomial)
 		if _, err := io.Copy(h, f); err != nil {
 			//some error logging
 		}
