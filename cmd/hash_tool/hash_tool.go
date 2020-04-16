@@ -19,7 +19,7 @@ func main() {
 	flag.StringVar(&folderName, "folder", "", "a folder path")
 	flag.StringVar(&fileName, "file", "", "a file path")
 	flag.StringVar(&fileOutput, "output", "", "file path to dump data to")
-	flag.StringVar(&algorithm, "algorithm", "MD5", "hash algorithm to use (MD5/SHA1/SHA256)")
+	flag.StringVar(&algorithm, "algorithm", "MD5", "hash algorithm to use (MD5/SHA1/SHA256/CRC32)")
 
 	flag.Parse()
 
@@ -34,7 +34,7 @@ func main() {
 
 	//write the csv header data
 	var h string
-	
+
 	if algorithm != "" {
 
 		h = "FileName,HashValue(" + algorithm + ") \r\n"
@@ -76,7 +76,23 @@ func main() {
 	//for the list of files, open, create hash value and write file name and hash value to file
 	for _, file := range files {
 
-		v := hash.GetHashValue(file, algorithm)
+		/*v, err := hash.GetHashValue(file, algorithm)
+
+		if err != nil {
+			//some error logging
+			//error hashing file
+			continue
+		}*/
+
+		//f := bufio.NewReader(strings.NewReader(file))
+
+		v, err := hash.GetAnotherHashValue(file, algorithm)
+
+		if err != nil {
+			//some error logging
+			//error hashing file
+			continue
+		}
 
 		data := file + "," + v + "\r\n"
 
